@@ -13,8 +13,8 @@ class PepSpider(scrapy.Spider):
         for pep in all_pep:
             name_and_number = pep.css('a::text').getall()
             data = {
-                'number': name_and_number[0],
-                'name': name_and_number[1],
+                'number': name_and_number[0].strip(),
+                'name': name_and_number[1].strip(),
                 'status': pep.css('abbr::text').get()
             }
             yield PepParseItem(data)
