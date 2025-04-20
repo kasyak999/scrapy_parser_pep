@@ -16,3 +16,5 @@ FEEDS = {
         'overwrite': True
     },
 }
+
+TIME_FORMAT = "%Y-%m-%d_%H-%M-%S"

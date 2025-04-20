@@ -8,6 +8,7 @@ class PepParsePipeline:
         self.total = 0
         self.status_dict = defaultdict(int)
 
+        time_format = spider.settings.get('TIME_FORMAT', "%Y-%m-%d_%H-%M-%S")
         # Получаем путь к results из FEEDS или настройки
         feeds = spider.settings.getdict('FEEDS')
         if feeds:
@@ -20,7 +21,7 @@ class PepParsePipeline:
         self.filename = os.path.join(
             results_dir, (
                 f'status_summary_'
-                f'{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.csv'
+                f'{datetime.datetime.now().strftime(time_format)}.csv'
             ))
 
     def process_item(self, item, spider):
