@@ -1,6 +1,7 @@
 from collections import defaultdict
 import datetime
 import os
+import csv
 
 
 class PepParsePipeline:
@@ -10,14 +11,10 @@ class PepParsePipeline:
 
         time_format = spider.settings.get('TIME_FORMAT', "%Y-%m-%d_%H-%M-%S")
         # Получаем путь к results из FEEDS или настройки
-        feeds = spider.settings.getdict('FEEDS')
-        if feeds:
-            results_path = next(iter(feeds))
-            results_dir = os.path.dirname(results_path)
-        else:
-            results_dir = 'results'
-
+        results_path = next(iter(spider.settings.getdict('FEEDS')))
+        results_dir = os.path.dirname(results_path)
         os.makedirs(results_dir, exist_ok=True)
+
         self.filename = os.path.join(
             results_dir, (
                 f'status_summary_'
@@ -31,7 +28,8 @@ class PepParsePipeline:
 
     def close_spider(self, spider):
         with open(self.filename, mode='w', encoding='utf-8') as f:
-            f.write('Статус,Количество\n')
+            writer = csv.writer(f)
+            writer.writerow(['Статус', 'Количество'])
             for status, count in self.status_dict.items():
-                f.write(f'{status},{count}\n')
-            f.write(f"Total,{self.total}\n")
+                writer.writerow([status, count])
+            writer.writerow(['Total', self.total])
